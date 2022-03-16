@@ -1,3 +1,12 @@
+/*
+Name: 	Raul Garcia Jr
+    	Cat-Tuong Tu
+#RedID: 819138431
+		822204923
+#Class: CS480-01
+#Assignemt 3
+*/
+
 #ifndef OUTPUT_MODE_HELPERS_H
 #define OUTPUT_MODE_HELPERS_H
 

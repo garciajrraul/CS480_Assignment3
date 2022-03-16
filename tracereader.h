@@ -1,3 +1,11 @@
+/*
+Name: 	Raul Garcia Jr
+    	Cat-Tuong Tu
+#RedID: 819138431
+		822204923
+#Class: CS480-01
+#Assignemt 3
+*/
 
 /* C and C++ define some of their types in different places.
  * Check and see if we are using C or C++ and include appropriately
@@ -55,5 +63,3 @@ int NextAddress(FILE *trace_file, p2AddrTr *addr_ptr);
 #define FLUSHACK		0x35	// acknowledge flush
 #define STOPCLKACK		0x36	// acknowledge stop clock
 #define SMIACK			0x37	// acknowledge SMI mode
-						
-

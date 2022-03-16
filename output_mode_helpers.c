@@ -1,3 +1,12 @@
+/*
+Name: 	Raul Garcia Jr
+    	Cat-Tuong Tu
+#RedID: 819138431
+		822204923
+#Class: CS480-01
+#Assignemt 3
+*/
+
 #include <stdio.h>
 #include "output_mode_helpers.h"
 
@@ -110,7 +119,7 @@ void report_bitmasks(int levels, uint32_t *masks) {
   fflush(stdout);
 }
 
-/*
+/* VPN2PFN
  * report_pagemap
  * Write out page numbers and frame number
  * levels - specified number of levels in page table
