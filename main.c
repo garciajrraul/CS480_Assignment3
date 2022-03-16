@@ -7,15 +7,11 @@ Name: 	Raul Garcia Jr
 #Assignemt 3
 */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "main.h"
 #include "tracereader.h"
 #include "output_mode_helpers.h"
-
-#define MODEBUFFER 10
-#define INDEXOFTRACEFILE 1
+#include "pagetable.h"
+#include "tlb.h"
 
 int main(int argc, char **argv)
 {
@@ -28,11 +24,12 @@ int main(int argc, char **argv)
     int numberOfLevels; /*Number of levels for command line arguments*/
     int idx;    /*Index for command line arguments*/
 
+    /*Setl all output modes to false in a struct*/
     OutputOptionsType output = {.bitmasks = false, .offset = false, 
                                 .summary = false, .v2p_tlb_pt = false, 
                                 .virtual2physical = false, .vpn2pfn = false};
 
-    //Argument checking
+    /*Optional Argument checking*/
     int option;
     while((option = getopt(argc, argv, "n:c:o:")) != -1){
         switch(option){
@@ -42,36 +39,35 @@ int main(int argc, char **argv)
             case 'c':
                 maxNumberOfPageMapping = atoi(optarg);
                 break;
-            case 'o':
-                char mode[MODEBUFFER] = atoi(optarg);
-                if(mode == 'bitmaks'){output.bitmasks = true;}
-                else if(mode == 'virtual2physical'){output.virtual2physical = true;}
-                else if(mode == 'v2p_tlb_pt'){output.v2p_tlb_pt = true;}
-                else if(mode == 'vpn2pfn'){output.vpn2pfn = true;}
-                else if(mode == 'offset'){output.offset = true;}
-                else if(mode == 'summary'){output.summary = true;}
-                else{}
+            case 'o': /*Setting the output mode*/
+                if(optarg == 'bitmaks'){output.bitmasks = true;}
+                else if(optarg == 'virtual2physical'){output.virtual2physical = true;}
+                else if(optarg == 'v2p_tlb_pt'){output.v2p_tlb_pt = true;}
+                else if(optarg == 'vpn2pfn'){output.vpn2pfn = true;}
+                else if(optarg == 'offset'){output.offset = true;}
+                else {output.summary = true;} /*Default output mode*/
                 break;
             case 'default':
-                /*NOT SURE YET*/
-                break;
+                exit(EXIT_FAILURE);
         }
     }
 
     /* first mandatory argument, optind is defined by getopt */
     idx = optind;
 
-    int levels = argc - INDEXOFTRACEFILE; /*levels holds the amount of levels from command line*/
+    /* attempt to open trace file */
+    if((ifp = fopen(argv[idx],"rb")) == NULL) {
+        fprintf(stderr,"Unable open <<%s>>\n",argv[idx]); /*If can not open throws error and exits*/
+        exit(EXIT_FAILURE);
+    }
+
+    int levels = argc - idx; /*levels holds the amount of levels from command line*/
     int levelSizes[levels]; /*Array that holds level bit sizes*/
     int i;
     if(idx < argc){ /*Checks for mandatory arguments*/
-        /* attempt to open trace file */
-        if((ifp = fopen(argv[idx],"rb")) == NULL) {
-            fprintf(stderr,"Unable open <<%s>>\n",argv[INDEXOFTRACEFILE]); /*If can not open throws error and exits*/
-            exit(EXIT_FAILURE);
-        }
+        idx++;  /*IDX increased after opening tracefile*/
         /*Assigning bit totals to levels array from command line*/
-        for(i = idx; idx < argc; idx++){
+        for(i = idx; i < argc; i++){
             if(argv[i] < 1){/*Checks to see if the page table is at least 1*/
                 fprintf(stderr, "Level 0 page table must be at least 1 bit\n");
                 exit(EXIT_FAILURE);
@@ -80,14 +76,9 @@ int main(int argc, char **argv)
                 fprintf(stderr, "Too many bits used in page tables\n");
                 exit(EXIT_FAILURE);
             }
-            //levelSizes[];
+            levelSizes[i] = argv[i];
         }
     }
-    else{/*No Mandatory arguments*/
-        fprintf(stderr, "Not enough arguments\n"); /*Prints error and exits*/
-        exit(EXIT_FAILURE);
-    }
-
 
     /*while (!feof(ifp)) {
         //get next address and process
@@ -97,6 +88,7 @@ int main(int argc, char **argv)
             if ((i % 100000) == 0)fprintf(stderr,"%dK samples processed\r", i/100000);
         }
     }*/
+
 
   /* clean up and return success */
   fclose(ifp);

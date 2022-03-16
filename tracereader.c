@@ -7,7 +7,7 @@ Name: 	Raul Garcia Jr
 #Assignemt 3
 */
 
-#include <stdio.h>
+#include "main.h"
 #include "tracereader.h"
 #include "output_mode_helpers.h"
 

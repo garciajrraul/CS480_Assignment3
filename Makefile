@@ -22,11 +22,15 @@ CXXFLAGS=-std=c11 -g
 pagingwithtlb : main.o tracereader.o output_mode_helper.o
         $(CXX) $(CXXFLAGS) -o pagingwithtlb $^
 
-main.o: main.c
+main.o: tracereader.h output_mode_helper.h pagetable.h tlb.h main.h main.c
 
-tracereader.o: tracereader.h tracereader.c
+tracereader.o: main.h tracereader.h tracereader.c
 
-output_mode_helper.o: output_mode_helper.h output_mode_helper.c
+output_mode_helper.o: main.h output_mode_helper.h output_mode_helper.c
+
+pagetable.o: main.h pagetable.h pagetable.c
+
+tlb.o: main.h tlb.h tlb.c
 
 clean:
         rm *.o pagingwithtlb
