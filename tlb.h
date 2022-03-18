@@ -6,3 +6,8 @@ Name: 	Raul Garcia Jr
 #Class: CS480-01
 #Assignemt 3
 */
+
+#ifndef TLB_H
+#define TLB_H
+
+#endif

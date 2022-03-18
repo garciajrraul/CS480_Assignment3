@@ -7,6 +7,9 @@ Name: 	Raul Garcia Jr
 #Assignemt 3
 */
 
+#ifndef PAGETABLE_H
+#define PAGETABLE_H
+
 typedef struct PageTable{
 	struct Levels *root; /*MAYBE, Pointer to root node level*/
 
@@ -31,3 +34,5 @@ typedef struct Map{
 unsigned int virtualAddressToPageNum (unsigned int virtualAddress, unsigned int mask, unsigned int shift);
 void pageInsert(PageTable *pagetable, unsigned int virtualAddress, unsigned int frame);
 Map * pageLookup(PageTable *pageTable, unsigned int virtualAddress);
+
+#endif
