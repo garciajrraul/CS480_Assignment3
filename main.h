@@ -17,6 +17,6 @@ Name: 	Raul Garcia Jr
 #ifndef MAIN_H
 #define MAIN_H
 
-#define INDEXOFTRACEFILE 1
+#define BITSIZE 32
 
 #endif

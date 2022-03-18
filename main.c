@@ -63,8 +63,8 @@ int main(int argc, char **argv)
     }
     idx++;  /*IDX increased after opening tracefile*/
 
-    int levels = argc - idx; /*Amount of levels from command line stored in PageTable struct*/
-    pg = getPageTable(levels); //PageTable Struct Initilization
+    unsigned int levels = argc - idx; /*Amount of levels from command line stored in PageTable struct*/
+    unsigned int levelSizes[levels]; /*Array that holds level bit sizes*/
 
     int i, j;
     if(idx < argc){ /*Checks for mandatory arguments*/
@@ -79,10 +79,12 @@ int main(int argc, char **argv)
                 fprintf(stderr, "Too many bits used in page tables\n");
                 exit(EXIT_FAILURE);
             }
-            pg->entryCount[j] = atoi(argv[i]); //Assignment of Entrycount to page Table
+            levelSizes[j]= atoi(argv[i]); //Assignment of Entrycount to page Table
             j++;
         }
     }
+
+    pg = getPageTable(levels, levelSizes); //PageTable Struct Initilization
 
     /* Reding of file*/
     while (!feof(ifp)) {
