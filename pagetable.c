@@ -10,6 +10,19 @@ Name: 	Raul Garcia Jr
 #include "main.h"
 #include "pagetable.h"
 
+struct pageTable *getPageTable(unsigned int levels){
+	struct PageTable *temp = (struct PageTable*) malloc(sizeof(struct PageTable));
+	unsigned int entry[levels], shift[levels];
+	uint32_t bit[levels];
+
+	temp->levelCount = levels;
+	temp->bitMaskArr = bit;
+	temp->entryCount = entry;
+	temp->shiftArr = shift;
+
+	return temp;
+}
+
 unsigned int virtualToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift){
 
 }

@@ -7,6 +7,7 @@ Name: 	Raul Garcia Jr
 #Assignemt 3
 */
 
+//Adding all for now cause don't know which will be used
 #include "main.h"
 #include "tracereader.h"
 #include "output_mode_helpers.h"
@@ -24,10 +25,11 @@ int main(int argc, char **argv)
     int numberOfLevels; /*Number of levels for command line arguments*/
     int idx;    /*Index for command line arguments*/
 
-    /*Setl all output modes to false in a struct*/
+    /*Decleration of OptionType Struct*/
     OutputOptionsType output = {.bitmasks = false, .offset = false, 
                                 .summary = false, .v2p_tlb_pt = false, 
                                 .virtual2physical = false, .vpn2pfn = false};
+    struct PageTable *pg; /*Decleration of PageTable Struct*/
 
     /*Optional Argument checking*/
     int option;
@@ -52,8 +54,7 @@ int main(int argc, char **argv)
         }
     }
 
-    /* first mandatory argument, optind is defined by getopt */
-    idx = optind;
+    idx = optind; /* First mandatory argument index, optind is defined by getopt */
 
     /* attempt to open trace file */
     if((ifp = fopen(argv[idx],"rb")) == NULL) {
@@ -62,8 +63,9 @@ int main(int argc, char **argv)
     }
     idx++;  /*IDX increased after opening tracefile*/
 
-    int levels = argc - idx; /*levels holds the amount of levels from command line*/
-    int levelSizes[levels]; /*Array that holds level bit sizes*/
+    int levels = argc - idx; /*Amount of levels from command line stored in PageTable struct*/
+    pg = getPageTable(levels); //PageTable Struct Initilization
+
     int i, j;
     if(idx < argc){ /*Checks for mandatory arguments*/
         j = 0; //Index for the levels array
@@ -77,19 +79,20 @@ int main(int argc, char **argv)
                 fprintf(stderr, "Too many bits used in page tables\n");
                 exit(EXIT_FAILURE);
             }
-            levelSizes[j] = atoi(argv[i]);
+            pg->entryCount[j] = atoi(argv[i]); //Assignment of Entrycount to page Table
             j++;
         }
     }
 
-    /*while (!feof(ifp)) {
+    /* Reding of file*/
+    while (!feof(ifp)) {
         //get next address and process
         if (NextAddress(ifp, &trace)) {
             AddressDecoder(&trace, stdout);
             i++;
             if ((i % 100000) == 0)fprintf(stderr,"%dK samples processed\r", i/100000);
         }
-    }*/
+    }
 
 
   /* clean up and return success */
