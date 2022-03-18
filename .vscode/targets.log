@@ -6,7 +6,7 @@ make all -f /home/raul/projects/Assignment2/.vscode/Makefile --print-data-base -
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Mar 18 10:36:36 2022
+# Make data base, printed on Fri Mar 18 12:11:37 2022
 
 # Variables
 
@@ -45,6 +45,9 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 VSCODE_CWD = /mnt/c/Users/Raulito Laptop/AppData/Local/Programs/Microsoft VS Code
 # default
+ 
+make: *** No rule to make target 'all'.  Stop.
+ 
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
 PATH = /home/raul/.vscode-server/bin/c722ca6c7eed3d7987c0d5c3df5c45f6b15e77d1/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files (x86)/VMware/VMware Workstation/bin/:/mnt/c/Program Files/Common Files/Oracle/Java/javapath:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/iCLS/:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/iCLS/:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/Intel/WiFi/bin/:/mnt/c/Program Files/Common Files/Intel/WirelessCommon/:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files (x86)/Simply Fortran 3/mingw-w64/bin:/mnt/c/Program Files (x86)/Simply Fortran 3/mingw-w64/x86_64-w64-mingw32/lib32:/mnt/c/Program Files (x86)/Simply Fortran 3/mingw-w64/x86_64-w64-mingw32/lib64:/mnt/c/Program Files/PuTTY/:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/nodejs/:/mnt/c/Users/Raulito Laptop/AppData/Local/Microsoft/WindowsApps:/mnt/c/Program Files/Intel/WiFi/bin/:/mnt/c/Program Files/Common Files/Intel/WirelessCommon/:/mnt/c/Users/Raulito Laptop/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Raulito Laptop/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Raulito Laptop/AppData/Roaming/npm
@@ -270,8 +273,6 @@ dicttree.h:
 # strcache performance: lookups = 38 / hit rate = 47%
 # hash-table stats:
 # Load=20/8192=0%, Rehash=0, Collisions=0/38=0%
-# Finished Make data base on Fri Mar 18 10:36:36 2022
+# Finished Make data base on Fri Mar 18 12:11:37 2022
 
- 
-make: *** No rule to make target 'all'.  Stop.
  

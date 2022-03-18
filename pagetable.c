@@ -10,7 +10,7 @@ Name: 	Raul Garcia Jr
 #include "main.h"
 #include "pagetable.h"
 
-struct pageTable *getPageTable(unsigned int levels){
+struct pageTable *getPageTable(unsigned int levels, unsigned int* levelSizes){
 	struct PageTable *temp = (struct PageTable*) malloc(sizeof(struct PageTable));
 	unsigned int entry[levels], shift[levels];
 	uint32_t bit[levels];
@@ -19,6 +19,14 @@ struct pageTable *getPageTable(unsigned int levels){
 	temp->bitMaskArr = bit;
 	temp->entryCount = entry;
 	temp->shiftArr = shift;
+
+	unsigned int offset = BITSIZE;
+	int i;
+	for(i = 0; i < levels; i++){
+		temp->shiftArr[i] = BITSIZE - levelSizes[i]; /*Initalizes shift array from offset*/
+		temp->entryCount[i] = pow(2, levelSizes[i]); /*Initalizes entrycount array for level*/
+		offset = offset - levelSizes[i]; /*Removes level bit size from the Offset*/
+	}
 
 	return temp;
 }

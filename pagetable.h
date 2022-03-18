@@ -32,7 +32,7 @@ typedef struct Map{
 }Map;
 
 
-struct pageTable *getPageTable(unsigned int levels);
+struct pageTable *getPageTable(unsigned int levels, unsigned int *levelSizes);
 unsigned int virtualAddressToPageNum (unsigned int virtualAddress, unsigned int mask, unsigned int shift);
 void pageInsert(PageTable *pagetable, unsigned int virtualAddress, unsigned int frame);
 Map * pageLookup(PageTable *pageTable, unsigned int virtualAddress);
