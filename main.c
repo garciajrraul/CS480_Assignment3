@@ -7,6 +7,7 @@ Name: 	Raul Garcia Jr
 #Assignemt 3
 */
 
+//Adding all for now cause don't know which will be used
 #include "main.h"
 #include "tracereader.h"
 #include "output_mode_helpers.h"
@@ -16,7 +17,7 @@ Name: 	Raul Garcia Jr
 int main(int argc, char **argv)
 {
     FILE *ifp;	        /* trace file */
-    unsigned long i = 0;  /* instructions processed */
+    //unsigned long i = 0;  /* instructions processed */
     p2AddrTr trace;	/* traced address */
 
     int numberOfMemoryAccesses;
@@ -24,10 +25,11 @@ int main(int argc, char **argv)
     int numberOfLevels; /*Number of levels for command line arguments*/
     int idx;    /*Index for command line arguments*/
 
-    /*Setl all output modes to false in a struct*/
+    /*Decleration of OptionType Struct*/
     OutputOptionsType output = {.bitmasks = false, .offset = false, 
                                 .summary = false, .v2p_tlb_pt = false, 
                                 .virtual2physical = false, .vpn2pfn = false};
+    struct PageTable *pg; /*Decleration of PageTable Struct*/
 
     /*Optional Argument checking*/
     int option;
@@ -40,54 +42,57 @@ int main(int argc, char **argv)
                 maxNumberOfPageMapping = atoi(optarg);
                 break;
             case 'o': /*Setting the output mode*/
-                if(optarg == 'bitmaks'){output.bitmasks = true;}
-                else if(optarg == 'virtual2physical'){output.virtual2physical = true;}
-                else if(optarg == 'v2p_tlb_pt'){output.v2p_tlb_pt = true;}
-                else if(optarg == 'vpn2pfn'){output.vpn2pfn = true;}
-                else if(optarg == 'offset'){output.offset = true;}
+                if(strcmp("bitmask", optarg) == 0){output.bitmasks = true;}
+                else if(strcmp("virtual2physical", optarg) == 0){output.virtual2physical = true;}
+                else if(strcmp("v2p_tlb_pt", optarg) == 0){output.v2p_tlb_pt = true;}
+                else if(strcmp("vpn2pfn", optarg) == 0){output.vpn2pfn = true;}
+                else if(strcmp("offset", optarg) == 0){output.offset = true;}
                 else {output.summary = true;} /*Default output mode*/
                 break;
-            case 'default':
-                exit(EXIT_FAILURE);
+            default:
+                break;
         }
     }
 
-    /* first mandatory argument, optind is defined by getopt */
-    idx = optind;
+    idx = optind; /* First mandatory argument index, optind is defined by getopt */
 
     /* attempt to open trace file */
     if((ifp = fopen(argv[idx],"rb")) == NULL) {
         fprintf(stderr,"Unable open <<%s>>\n",argv[idx]); /*If can not open throws error and exits*/
         exit(EXIT_FAILURE);
     }
+    idx++;  /*IDX increased after opening tracefile*/
 
-    int levels = argc - idx; /*levels holds the amount of levels from command line*/
-    int levelSizes[levels]; /*Array that holds level bit sizes*/
-    int i;
+    int levels = argc - idx; /*Amount of levels from command line stored in PageTable struct*/
+    pg = getPageTable(levels); //PageTable Struct Initilization
+
+    int i, j;
     if(idx < argc){ /*Checks for mandatory arguments*/
-        idx++;  /*IDX increased after opening tracefile*/
+        j = 0; //Index for the levels array
         /*Assigning bit totals to levels array from command line*/
         for(i = idx; i < argc; i++){
-            if(argv[i] < 1){/*Checks to see if the page table is at least 1*/
+            if(atoi(argv[i]) < 1){/*Checks to see if the page table is at least 1*/
                 fprintf(stderr, "Level 0 page table must be at least 1 bit\n");
                 exit(EXIT_FAILURE);
             }
-            if(argv[i] > 28){/*Checks to see if page table isn't over*/
+            if(atoi(argv[i]) > 28){/*Checks to see if page table isn't over 28*/
                 fprintf(stderr, "Too many bits used in page tables\n");
                 exit(EXIT_FAILURE);
             }
-            levelSizes[i] = argv[i];
+            pg->entryCount[j] = atoi(argv[i]); //Assignment of Entrycount to page Table
+            j++;
         }
     }
 
-    /*while (!feof(ifp)) {
+    /* Reding of file*/
+    while (!feof(ifp)) {
         //get next address and process
         if (NextAddress(ifp, &trace)) {
             AddressDecoder(&trace, stdout);
             i++;
             if ((i % 100000) == 0)fprintf(stderr,"%dK samples processed\r", i/100000);
         }
-    }*/
+    }
 
 
   /* clean up and return success */

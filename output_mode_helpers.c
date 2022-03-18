@@ -7,8 +7,8 @@ Name: 	Raul Garcia Jr
 #Assignemt 3
 */
 
-#include <stdio.h>
 #include "output_mode_helpers.h"
+#include "main.h"
 
 /* Handle C++ namespaces, ignore if compiled in C 
  * C++ usually uses this #define to declare the C++ standard.
