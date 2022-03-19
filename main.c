@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
     int numberOfMemoryAccesses;
     int maxNumberOfPageMapping;
-    int numberOfLevels; /*Number of levels for command line arguments*/
+    unsigned int numberOfLevels; /*Number of levels for command line arguments*/
     int idx;    /*Index for command line arguments*/
 
     /*Decleration of OptionType Struct*/
@@ -49,15 +49,14 @@ int main(int argc, char **argv)
                 else if(strcmp("offset", optarg) == 0){output.offset = true;}
                 else {output.summary = true;} /*Default output mode*/
                 break;
-            /*ase ':' :
+            case ':' :
                 fprintf(stderr, "Option takes an argument\n");
                 exit(EXIT_FAILURE);
             case '?':
                 fprintf(stderr, "Level 0 page table must be at least 1 bit\n");
-                exit(EXIT_FAILURE);*/
+                exit(EXIT_FAILURE);
+                break;
             default:
-                /*fprintf(stderr, "Level 0 page table must be at least 1 bit\n");
-                exit(EXIT_FAILURE);*/
                 break;
         }
     }
@@ -97,18 +96,18 @@ int main(int argc, char **argv)
 
     int b = 0;
     /* Reding of file*/
-    while (!feof(ifp)) {
+    /*while (!feof(ifp)) {
         //get next address and process
         if (NextAddress(ifp, &trace)) {
             AddressDecoder(&trace, stdout);
             i++;
             if ((i % 100000) == 0)fprintf(stderr,"%dK samples processed\r", i/100000);
         }
-        if(b == 5){
+        /*if(b == 20){
             break;
         }
         b++;
-    }
+    }*/
 
 
   /* clean up and return success */
