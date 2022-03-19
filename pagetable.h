@@ -9,7 +9,6 @@ Name: 	Raul Garcia Jr
 
 #ifndef PAGETABLE_H
 #define PAGETABLE_H
-#include <stdint.h>
 
 typedef struct PageTable
 {
