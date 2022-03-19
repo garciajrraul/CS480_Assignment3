@@ -30,6 +30,16 @@ struct pageTable *getPageTable(unsigned int levels, unsigned int* levelSizes){
 	}
 
 	/*Bitmask Array Assignment*/
+	unsigned int shiftBits = BITSIZE;
+	int bits;
+	unsigned int bitmask;
+	for(i = 0; i < levels; i++){
+		bits = levelSizes[i];
+		bitmask = (unsigned int)(1 << bits) - 1;
+		temp->bitMaskArr[i] = bitmask << shiftBits;
+		shiftBits += levelSizes[i];
+		printf("HEX: %08x\n", temp->bitMaskArr[i]); /*For testing purposes*/
+	}
 
 	return temp;
 }
