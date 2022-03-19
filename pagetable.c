@@ -20,13 +20,16 @@ struct pageTable *getPageTable(unsigned int levels, unsigned int* levelSizes){
 	temp->entryCount = entry;
 	temp->shiftArr = shift;
 
-	unsigned int offset = BITSIZE;
+	unsigned int shiftOffset = BITSIZE;
 	int i;
+	/*Assigning to Shift Array and Entry count*/
 	for(i = 0; i < levels; i++){
 		temp->shiftArr[i] = BITSIZE - levelSizes[i]; /*Initalizes shift array from offset*/
 		temp->entryCount[i] = pow(2, levelSizes[i]); /*Initalizes entrycount array for level*/
-		offset = offset - levelSizes[i]; /*Removes level bit size from the Offset*/
+		shiftOffset = shiftOffset - levelSizes[i]; /*Removes level bit size from the Offset*/
 	}
+
+	/*Bitmask Array Assignment*/
 
 	return temp;
 }
