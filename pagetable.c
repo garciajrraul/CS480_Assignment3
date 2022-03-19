@@ -21,13 +21,27 @@ struct pageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 	temp->entryCount = entry;
 	temp->shiftArr = shift;
 
-	unsigned int offset = BITSIZE;
+	unsigned int shiftOffset = BITSIZE;
 	int i;
+	/*Assigning to Shift Array and Entry count*/
 	for (i = 0; i < levels; i++)
 	{
 		temp->shiftArr[i] = BITSIZE - levelSizes[i]; /*Initalizes shift array from offset*/
 		temp->entryCount[i] = pow(2, levelSizes[i]); /*Initalizes entrycount array for level*/
-		offset = offset - levelSizes[i];			 /*Removes level bit size from the Offset*/
+		shiftOffset = shiftOffset - levelSizes[i];	 /*Removes level bit size from the Offset*/
+	}
+
+	/*Bitmask Array Assignment*/
+	unsigned int shiftBits = BITSIZE;
+	int bits;
+	unsigned int bitmask;
+	for (i = 0; i < levels; i++)
+	{
+		bits = levelSizes[i];
+		bitmask = (unsigned int)(1 << bits) - 1;
+		temp->bitMaskArr[i] = bitmask << shiftBits;
+		shiftBits += levelSizes[i];
+		printf("HEX: %08x\n", temp->bitMaskArr[i]); /*For testing purposes*/
 	}
 
 	return temp;
