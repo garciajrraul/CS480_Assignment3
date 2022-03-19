@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
     int numberOfMemoryAccesses;
     int maxNumberOfPageMapping;
-    int numberOfLevels; /*Number of levels for command line arguments*/
+    unsigned int numberOfLevels; /*Number of levels for command line arguments*/
     int idx;    /*Index for command line arguments*/
 
     /*Decleration of OptionType Struct*/
@@ -48,6 +48,13 @@ int main(int argc, char **argv)
                 else if(strcmp("vpn2pfn", optarg) == 0){output.vpn2pfn = true;}
                 else if(strcmp("offset", optarg) == 0){output.offset = true;}
                 else {output.summary = true;} /*Default output mode*/
+                break;
+            case ':' :
+                fprintf(stderr, "Option takes an argument\n");
+                exit(EXIT_FAILURE);
+            case '?':
+                fprintf(stderr, "Level 0 page table must be at least 1 bit\n");
+                exit(EXIT_FAILURE);
                 break;
             default:
                 break;
@@ -86,6 +93,8 @@ int main(int argc, char **argv)
 
     pg = getPageTable(levels, levelSizes); //PageTable Struct Initilization
 
+
+    int b = 0;
     /* Reding of file*/
     /*while (!feof(ifp)) {
         //get next address and process
@@ -94,6 +103,10 @@ int main(int argc, char **argv)
             i++;
             if ((i % 100000) == 0)fprintf(stderr,"%dK samples processed\r", i/100000);
         }
+        /*if(b == 20){
+            break;
+        }
+        b++;
     }*/
 
 
