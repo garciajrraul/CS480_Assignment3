@@ -1,6 +1,6 @@
 /*
 Name: 	Raul Garcia Jr
-    	Cat-Tuong Tu
+		Cat-Tuong Tu
 #RedID: 819138431
 		822204923
 #Class: CS480-01
@@ -9,32 +9,36 @@ Name: 	Raul Garcia Jr
 
 #ifndef PAGETABLE_H
 #define PAGETABLE_H
+#include <stdint.h>
 
-typedef struct PageTable{
+typedef struct PageTable
+{
 	struct Levels *root; /*MAYBE, Pointer to root node level*/
 
-	unsigned int levelCount; 
+	unsigned int levelCount;
 	uint32_t *bitMaskArr;
 	unsigned int *shiftArr;
 	unsigned int *entryCount;
-}PageTable;
+} PageTable;
 
-typedef struct Level{
+typedef struct Level
+{
 	struct Pagetable *root; /*MAYBE, Pointer to root of pagetable*/
 
 	unsigned int currentDepth;
 	struct Levels *nextLevel; /*pointer for next level*/
-	struct Map *map;/*pointer for map entries*/
-}Level;
+	struct Map *map;		  /*pointer for map entries*/
+} Level;
 
-typedef struct Map{
-
-}Map;
-
+typedef struct Map
+{
+	bool isValid;		/* Boolean flag denoting whether the page is valid */
+	unsigned int frame; /* Physical frame number */
+} Map;
 
 struct pageTable *getPageTable(unsigned int levels, unsigned int *levelSizes);
-unsigned int virtualAddressToPageNum (unsigned int virtualAddress, unsigned int mask, unsigned int shift);
+unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift);
 void pageInsert(PageTable *pagetable, unsigned int virtualAddress, unsigned int frame);
-Map * pageLookup(PageTable *pageTable, unsigned int virtualAddress);
+Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress);
 
 #endif
