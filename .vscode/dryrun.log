@@ -1,6 +1,5 @@
 make -f /home/raul/projects/Assignment2/.vscode/Makefile --dry-run --keep-going --print-directory
 make: Entering directory '/home/raul/projects/Assignment3/CS480_Assignment3'
- 
 make: Leaving directory '/home/raul/projects/Assignment3/CS480_Assignment3'
  
 make: *** No rule to make target 'dicttree.h', needed by 'main.o'.
