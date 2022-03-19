@@ -87,14 +87,14 @@ int main(int argc, char **argv)
     pg = getPageTable(levels, levelSizes); //PageTable Struct Initilization
 
     /* Reding of file*/
-    while (!feof(ifp)) {
+    /*while (!feof(ifp)) {
         //get next address and process
         if (NextAddress(ifp, &trace)) {
             AddressDecoder(&trace, stdout);
             i++;
             if ((i % 100000) == 0)fprintf(stderr,"%dK samples processed\r", i/100000);
         }
-    }
+    }*/
 
 
   /* clean up and return success */
