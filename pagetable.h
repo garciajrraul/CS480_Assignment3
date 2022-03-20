@@ -12,21 +12,22 @@ Name: 	Raul Garcia Jr
 
 typedef struct PageTable
 {
-	struct Levels *root; /*MAYBE, Pointer to root node level*/
-
-	unsigned int levelCount;
+	struct Level *root; /*Pointer to root node level*/
 	uint32_t *bitMaskArr;
 	unsigned int *shiftArr;
 	unsigned int *entryCount;
+	unsigned int levelCount;
+	unsigned int currentFrame;
+
 } PageTable;
 
 typedef struct Level
 {
-	struct Pagetable *root; /*MAYBE, Pointer to root of pagetable*/
-
+	struct PageTable *root; /*Pointer to root of pagetable*/
 	unsigned int currentDepth;
-	struct Levels *nextLevel; /*pointer for next level*/
-	struct Map *map;		  /*pointer for map entries*/
+	struct Level *nextLevel; /*pointer for next level*/
+	struct Map *map;		 /*pointer for map entries*/
+
 } Level;
 
 typedef struct Map
@@ -35,7 +36,8 @@ typedef struct Map
 	unsigned int frame; /* Physical frame number */
 } Map;
 
-struct pageTable *getPageTable(unsigned int levels, unsigned int *levelSizes);
+struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes);
+struct Level *getLevel(PageTable *pagetable, unsigned int currentDepth);
 unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift);
 void pageInsert(PageTable *pagetable, unsigned int virtualAddress, unsigned int frame);
 Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress);
