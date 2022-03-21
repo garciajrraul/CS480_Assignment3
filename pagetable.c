@@ -22,7 +22,6 @@ struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 	temp->entryCount = entry;
 	temp->shiftArr = shift;
 	temp->currentFrame = (unsigned int)0; // Initialize frame number counter
-	temp->root = getLevel(temp, 0);		  // 0 is the depth of the first level
 
 	unsigned int shiftOffset = BITSIZE;
 	int i;
@@ -44,13 +43,13 @@ struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 		bitmask = (unsigned int)(1 << bits) - 1;
 		temp->bitMaskArr[i] = swap_endian(bitmask << shiftBits);
 		shiftBits += levelSizes[i];
-		//printf("HEX Before: %08x\n", temp->bitMaskArr[i]); /*For testing purposes*/
-		//printf("HEX After: %08x\n", swap_endian(temp->bitMaskArr[i])); /*For testing purposes*/
-
+		// printf("HEX Before: %08x\n", temp->bitMaskArr[i]); /*For testing purposes*/
+		// printf("HEX After: %08x\n", swap_endian(temp->bitMaskArr[i])); /*For testing purposes*/
 	}
-
+	temp->root = getLevel(temp, 0); // 0 is the depth of the first level
 	return temp;
 }
+
 /*
 struct Level *getLevel(PageTable *pagetable, unsigned int currentDepth)
 {
@@ -62,7 +61,7 @@ struct Level *getLevel(PageTable *pagetable, unsigned int currentDepth)
 
 	// Set current depth to depth parameter
 	level->currentDepth = currentDepth;
-	printf("%d\n", level->currentDepth);
+
 	return level;
 }
 */
@@ -71,21 +70,21 @@ struct Level *getLevel(PageTable *pagetable, unsigned int currentDepth)
 {
 	// Instantiate new level
 	struct Level *level = (struct Level *)malloc(sizeof(struct Level));
-	printf("Level struct instantiated\n");
 
 	// Set pagetable node to root
 	level->root = pagetable;
 
 	// Set current depth to depth parameter
 	level->currentDepth = currentDepth;
-	printf("Level props initialized\n");
+	printf("Current depth 2: %d\n", level->currentDepth);
 
 	if (pagetable->levelCount == 1 || currentDepth == pagetable->levelCount - 1)
 	{
-		struct Map *m[pagetable->entryCount[0]];
+		struct Map *m[pagetable->entryCount[currentDepth]];
 		int i = 0;
-		for (i = 0; i < pagetable->entryCount[0]; i++)
+		for (i = 0; i < pagetable->entryCount[currentDepth]; i++)
 		{
+			printf("Made it(leaf)\n");
 			m[i] = NULL;
 		}
 		level->map = m;
@@ -94,9 +93,10 @@ struct Level *getLevel(PageTable *pagetable, unsigned int currentDepth)
 	else
 	{
 		printf("Creating inner level node...\n");
-		struct Level *nextL[pagetable->entryCount[0]];
-		int i = 0;
-		for (i = 0; i < pagetable->entryCount[0]; i++)
+		struct Level *nextL[pagetable->entryCount[currentDepth]];
+		int i;
+		printf("Entries: %d\n", pagetable->entryCount[currentDepth]);
+		for (i = 0; i < pagetable->entryCount[currentDepth]; i++)
 		{
 			printf("Made it\n");
 			nextL[i] = NULL;
