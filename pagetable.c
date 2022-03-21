@@ -9,6 +9,7 @@ Name: 	Raul Garcia Jr
 
 #include "main.h"
 #include "pagetable.h"
+#include "tracereader.h"
 
 struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 {
@@ -43,7 +44,9 @@ struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 		bitmask = (unsigned int)(1 << bits) - 1;
 		temp->bitMaskArr[i] = swap_endian(bitmask << shiftBits);
 		shiftBits += levelSizes[i];
-		printf("HEX: %08x\n", temp->bitMaskArr[i]); /*For testing purposes*/
+		//printf("HEX Before: %08x\n", temp->bitMaskArr[i]); /*For testing purposes*/
+		//printf("HEX After: %08x\n", swap_endian(temp->bitMaskArr[i])); /*For testing purposes*/
+
 	}
 
 	return temp;

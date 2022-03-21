@@ -14,6 +14,7 @@ Name: 	Raul Garcia Jr
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 
 #ifndef MAIN_H
 #define MAIN_H

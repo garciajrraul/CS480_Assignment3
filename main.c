@@ -23,8 +23,10 @@ int main(int argc, char **argv)
 
     int numberOfMemoryAccesses;
     int maxNumberOfPageMapping;
-    int numberOfLevels; /*Number of levels for command line arguments*/
-    int idx;            /*Index for command line arguments*/
+
+    unsigned int numberOfLevels; /*Number of levels for command line arguments*/
+    int idx;    /*Index for command line arguments*/
+
 
     /*Decleration of OptionType Struct*/
     OutputOptionsType output = {.bitmasks = false, .offset = false, .summary = false, .v2p_tlb_pt = false, .virtual2physical = false, .vpn2pfn = false};
@@ -32,6 +34,7 @@ int main(int argc, char **argv)
 
     /*Optional Argument checking*/
     int option;
+
     while ((option = getopt(argc, argv, "n:c:o:")) != -1)
     {
         switch (option)
@@ -114,6 +117,8 @@ int main(int argc, char **argv)
     printf("Pagetable currentFrame: %d\n", pg->currentFrame);
     pageInsert(pg, address, pg->currentFrame);
 
+
+    int b = 0;
     /* Reding of file*/
     /*while (!feof(ifp)) {
         //get next address and process
@@ -122,6 +127,10 @@ int main(int argc, char **argv)
             i++;
             if ((i % 100000) == 0)fprintf(stderr,"%dK samples processed\r", i/100000);
         }
+        /*if(b == 20){
+            break;
+        }
+        b++;
     }*/
 
     /* clean up and return success */
