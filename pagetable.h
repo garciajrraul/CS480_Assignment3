@@ -40,6 +40,7 @@ struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes);
 struct Level *getLevel(PageTable *pagetable, unsigned int currentDepth);
 unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift);
 void pageInsert(PageTable *pagetable, unsigned int virtualAddress, unsigned int frame);
+void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame);
 Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress);
 
 #endif

@@ -109,6 +109,10 @@ int main(int argc, char **argv)
     }
 
     pg = getPageTable(levels, levelSizes); // PageTable Struct Initilization
+    unsigned int address = 0x82f998Fe;
+    printf("Testing pageInsert function.\n");
+    printf("Pagetable currentFrame: %d\n", pg->currentFrame);
+    pageInsert(pg, address, pg->currentFrame);
 
     /* Reding of file*/
     /*while (!feof(ifp)) {
