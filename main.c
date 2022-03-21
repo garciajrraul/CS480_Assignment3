@@ -25,8 +25,7 @@ int main(int argc, char **argv)
     int maxNumberOfPageMapping;
 
     unsigned int numberOfLevels; /*Number of levels for command line arguments*/
-    int idx;    /*Index for command line arguments*/
-
+    int idx;                     /*Index for command line arguments*/
 
     /*Decleration of OptionType Struct*/
     OutputOptionsType output = {.bitmasks = false, .offset = false, .summary = false, .v2p_tlb_pt = false, .virtual2physical = false, .vpn2pfn = false};
@@ -90,6 +89,7 @@ int main(int argc, char **argv)
     unsigned int levelSizes[levels];  /*Array that holds level bit sizes*/
 
     int i, j;
+    int total = 0;
     if (idx < argc)
     {          /*Checks for mandatory arguments*/
         j = 0; // Index for the levels array
@@ -101,13 +101,14 @@ int main(int argc, char **argv)
                 fprintf(stderr, "Level 0 page table must be at least 1 bit\n");
                 exit(EXIT_FAILURE);
             }
-            if (atoi(argv[i]) > 28)
-            { /*Checks to see if page table isn't over 28*/
-                fprintf(stderr, "Too many bits used in page tables\n");
-                exit(EXIT_FAILURE);
-            }
+            total += atoi(argv[i]);
             levelSizes[j] = atoi(argv[i]); // Assignment of Entrycount to page Table
             j++;
+        }
+        if (total > 28)
+        { /*Checks to see if page table isn't over 28*/
+            fprintf(stderr, "Too many bits used in page tables\n");
+            exit(EXIT_FAILURE);
         }
     }
 
@@ -116,7 +117,6 @@ int main(int argc, char **argv)
     printf("Testing pageInsert function.\n");
     printf("Pagetable currentFrame: %d\n", pg->currentFrame);
     pageInsert(pg, address, pg->currentFrame);
-
 
     int b = 0;
     /* Reding of file*/
