@@ -12,18 +12,18 @@ Name: 	Raul Garcia Jr
 
 typedef struct PageTable
 {
-	struct Level *root; /*Pointer to root node level*/
+	struct Level *rootLevel; /*Pointer to root node level*/
 	uint32_t *bitMaskArr;
 	unsigned int *shiftArr;
 	unsigned int *entryCount;
 	unsigned int levelCount;
-	unsigned int currentFrame;
+	//unsigned int currentFrame;
 
 } PageTable;
 
 typedef struct Level
 {
-	struct PageTable *root; /*Pointer to root of pagetable*/
+	struct PageTable *rootPageTable; /*Pointer to root of pagetable*/
 	unsigned int currentDepth;
 	struct Level *nextLevel; /*pointer for next level*/
 	struct Map *map;		 /*pointer for map entries*/

@@ -13,7 +13,6 @@ Name: 	Raul Garcia Jr
 #include "output_mode_helpers.h"
 #include "pagetable.h"
 #include "tlb.h"
-#include <unistd.h>
 
 int main(int argc, char **argv)
 {
@@ -90,6 +89,7 @@ int main(int argc, char **argv)
     unsigned int levelSizes[levels];  /*Array that holds level bit sizes*/
 
     int i, j;
+    int total = 0;
     if (idx < argc)
     {          /*Checks for mandatory arguments*/
         j = 0; // Index for the levels array
@@ -101,21 +101,21 @@ int main(int argc, char **argv)
                 fprintf(stderr, "Level 0 page table must be at least 1 bit\n");
                 exit(EXIT_FAILURE);
             }
-            if (atoi(argv[i]) > 28)
+            total += atoi(argv[i]);
+            levelSizes[j] = atoi(argv[i]); // Assignment of Entrycount to page Table
+            j++;
+        }
+        if (total > 28)
             { /*Checks to see if page table isn't over 28*/
                 fprintf(stderr, "Too many bits used in page tables\n");
                 exit(EXIT_FAILURE);
             }
-            levelSizes[j] = atoi(argv[i]); // Assignment of Entrycount to page Table
-            j++;
-        }
     }
 
+    int currentFrame = 0;
     pg = getPageTable(levels, levelSizes); // PageTable Struct Initilization
-    unsigned int address = 0x82f998Fe;
-    printf("Testing pageInsert function.\n");
-    printf("Pagetable currentFrame: %d\n", pg->currentFrame);
-    pageInsert(pg, address, pg->currentFrame);
+    unsigned int address = 0x82F998FE;
+    pageInsert(pg, address, currentFrame);
 
 
     int b = 0;
