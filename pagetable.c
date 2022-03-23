@@ -123,14 +123,7 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 	{
 		printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
 		// Create new Level and set level to current depth + 1
-		struct Level *newLevel = (struct Level *)malloc(sizeof(struct Level) * levelPtr->rootPageTable->entryCount[levelPtr->currentDepth+1]);
-		newLevel->currentDepth = levelPtr->currentDepth + 1;
-		newLevel ->rootPageTable = levelPtr->rootPageTable;
-		levelPtr->nextLevel = newLevel;
-		int i;
-		for(i = 0; i < newLevel->rootPageTable->entryCount[newLevel->currentDepth]; i++){
-			newLevel->nextLevel = NULL;
-		}
+		struct Level *newLevel = getLevel(levelPtr->rootPageTable, depth + 1);
 		pageInsertForLevel(newLevel, virtualAddress, frame);
 	}
 }
