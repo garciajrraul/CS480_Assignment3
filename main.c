@@ -140,13 +140,13 @@ int main(int argc, char **argv)
     address = swap_endian(address);
     pageInsert(pg, address, currentFrame);
     /*printf("Page Look Up start\n");
-    printf("VALID: %d\n", pageLookup(pg, address)->isValid);
-    if(pageLookup(pg, address)->isValid == false){
+    printf("VALID: %d\n", pageLookUp(pg, address)->isValid);
+    if(pageLookUp(pg, address)->isValid == false){
         pageInsert(pg, address, currentFrame);
     }
     printf("-----------------------------------------------------\n");
-    printf("VALID: %d\n", pageLookup(pg, address)->isValid);
-    if(pageLookup(pg, address)->isValid == false){
+    printf("VALID: %d\n", pageLookUp(pg, address)->isValid);
+    if(pageLookUp(pg, address)->isValid == false){
         printf("wrong\n");
         pageInsert(pg, address, currentFrame);
     }

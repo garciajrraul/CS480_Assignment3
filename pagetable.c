@@ -60,12 +60,19 @@ struct Level *getLevel(PageTable *pagetable, unsigned int depth)
 
 	if (depth == pagetable->levelCount - 1)
 	{
-		levelZero->map = getMap(pagetable, depth);
+		struct Map *mp = (struct Map*)malloc(sizeof(struct Map) * pagetable->entryCount[depth]); 
+		levelZero->mapPtr = mp;
+		int i = 0;
+		for (i = 0; i < pagetable->entryCount[depth]; i++)
+		{
+			struct Map * m = getMap(pagetable, depth);
+			levelZero->mapPtr[i].map = m;
+		}
 	}
 	else
 	{
 		//printf("Creating inner level node...\n");
-		levelZero->nextLevel = (struct Level *)malloc(sizeof(struct Level)*pagetable->entryCount[depth]);
+		levelZero->nextLevel = (struct Level *)malloc(sizeof(struct Level));
 		int i = 0;
 		for (i = 0; i < pagetable->entryCount[depth]; i++)
 		{
@@ -76,11 +83,8 @@ struct Level *getLevel(PageTable *pagetable, unsigned int depth)
 }
 
 struct Map * getMap(PageTable *pg, unsigned int depth){
-	struct Map * m = (struct Map*)malloc(sizeof(struct Map) * pg->entryCount[depth]);
-	int i;
-	for(i = 0; i < pg->entryCount[depth]; i++){
-		m[i].isValid = false;
-	}
+	struct Map * m = (struct Map*)malloc(sizeof(struct Map));
+	m->isValid = false;
 	return m;
 }
 
@@ -97,7 +101,7 @@ void pageInsert(struct PageTable *pg, unsigned int virtualAddress, unsigned int 
 	pageInsertForLevel(pg->rootLevel, virtualAddress, frame);
 }
 
-void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame) /*ISSUE WITH PAGETABLE of nextLevel pointing to original pagetable*/
+void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame)
 {
 	unsigned int depth = levelPtr->currentDepth;
 	// Find index into the current page level WORKING PROPERLY!
@@ -106,9 +110,10 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 	// If the level is a leaf node
 	if (depth == levelPtr->rootPageTable->levelCount - 1)
 	{
-		levelPtr->map[page].isValid = true;
-		levelPtr->map[page].frame = frame;
-		printf("Map inserted at index: %i, frame: %d\n", page, frame);
+		struct Map* m = (struct Map*)malloc(sizeof(struct Map));
+		levelPtr->mapPtr->map[page]->isValid = true;
+		levelPtr->mapPtr->map[page]->frame = frame;
+		printf("Map inserted at index: %i, frame: %d, isValid:%d\n", page, frame, levelPtr->mapPtr->isValid);
 	}
 	else
 	{
@@ -120,7 +125,7 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 	}
 }
 
-Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
+/*Map *pageLookUp(PageTable *pageTable, unsigned int virtualAddress)
 {
 	struct Map *m; //= (struct Map*)malloc(sizeof(struct Map));
 	struct Level *levelPtr = pageTable->rootLevel; //Should be at the root level
@@ -135,7 +140,7 @@ Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 
 		}
 		printf("TWO LEVELS\n");
-		/*/NeXT LINE GIvES SEGFAULT FOR 2 LEVELS OR MORE*/
+		//NeXT LINE GIvES SEGFAULT FOR 2 LEVELS OR MORE
 		unsigned int pg = virtualAddressToPageNum(virtualAddress, pageTable->bitMaskArr[i], pageTable->shiftArr[i]);
 		levelPtr = levelPtr->nextLevel[pg];
 		printf("NO SEG FAULT\n");
@@ -146,4 +151,4 @@ Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 		levelPtr = levelPtr->nextLevel[pg];
 	}
 	//return mp;
-}
+}*/
