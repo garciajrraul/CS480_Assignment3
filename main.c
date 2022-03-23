@@ -13,7 +13,6 @@ Name: 	Raul Garcia Jr
 #include "output_mode_helpers.h"
 #include "pagetable.h"
 #include "tlb.h"
-#include <unistd.h>
 
 int main(int argc, char **argv)
 {
@@ -112,11 +111,33 @@ int main(int argc, char **argv)
         }
     }
 
+    unsigned int currentFrame = 0;
     pg = getPageTable(levels, levelSizes); // PageTable Struct Initilization
-    unsigned int address = 0x82f998Fe;
-    printf("Testing pageInsert function.\n");
-    printf("Pagetable currentFrame: %d\n", pg->currentFrame);
-    pageInsert(pg, address, pg->currentFrame);
+    if(output.bitmasks){
+        report_bitmasks(levels, pg->bitMaskArr);
+    }
+    else if (output.virtual2physical)
+    {
+
+    }
+    else if (output.v2p_tlb_pt)
+    {
+    
+    }
+    else if (output.vpn2pfn)
+    {
+
+    }
+    else if (output.offset)
+    {
+        
+    }
+    else{
+
+    }
+    
+    unsigned int address = 0x82F998FE;
+    pageInsert(pg, address, currentFrame);
 
     int b = 0;
     /* Reding of file*/

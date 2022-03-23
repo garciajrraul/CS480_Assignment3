@@ -13,24 +13,22 @@ Name: 	Raul Garcia Jr
 
 struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 {
-	struct PageTable *temp = (struct PageTable *)malloc(sizeof(struct PageTable));
-	unsigned int entry[levels], shift[levels];
-	uint32_t bit[levels];
-
-	temp->levelCount = levels;
-	temp->bitMaskArr = bit;
-	temp->entryCount = entry;
-	temp->shiftArr = shift;
-	temp->currentFrame = (unsigned int)0; // Initialize frame number counter
+	struct PageTable *PT = (struct PageTable *)malloc(sizeof(struct PageTable));
+	PT->levelCount = levels;
+	PT->bitMaskArr = malloc(sizeof(unsigned int)*levels);
+	PT->entryCount = malloc(sizeof(unsigned int)*levels);
+	PT->shiftArr = malloc(sizeof(unsigned int)*levels);
 
 	unsigned int shiftOffset = BITSIZE;
 	int i;
 	/*Assigning to Shift Array and Entry count*/
 	for (i = 0; i < levels; i++)
 	{
-		temp->shiftArr[i] = shiftOffset - levelSizes[i]; /*Initalizes shift array from offset*/
-		temp->entryCount[i] = pow(2, levelSizes[i]);	 /*Initalizes entrycount array for level*/
+		PT->shiftArr[i] = shiftOffset - levelSizes[i]; /*Initalizes shift array from offset*/
+		PT->entryCount[i] = pow(2, levelSizes[i]);	 /*Initalizes entrycount array for level*/
 		shiftOffset = shiftOffset - levelSizes[i];		 /*Removes level bit size from the Offset*/
+		//printf("Shift getPageTable: %d\n", PT->shiftArr[i]);
+		//printf("Entry getPageTable: %d\n", PT->entryCount[i]);
 	}
 
 	/*Bitmask Array Assignment*/
@@ -41,121 +39,106 @@ struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 	{
 		bits = levelSizes[i];
 		bitmask = (unsigned int)(1 << bits) - 1;
-		temp->bitMaskArr[i] = swap_endian(bitmask << shiftBits);
+		PT->bitMaskArr[i] = bitmask << shiftBits; //Maybe Swap_endian?*/
 		shiftBits += levelSizes[i];
-		// printf("HEX Before: %08x\n", temp->bitMaskArr[i]); /*For testing purposes*/
-		// printf("HEX After: %08x\n", swap_endian(temp->bitMaskArr[i])); /*For testing purposes*/
+		//printf("BIT OG: %08x\n", PT->bitMaskArr[i]); /*For testing purposes*/
 	}
-	temp->root = getLevel(temp, 0); // 0 is the depth of the first level
-	return temp;
+
+	PT->rootLevel = getLevel(PT, 0);
+	return PT;
 }
 
-/*
-struct Level *getLevel(PageTable *pagetable, unsigned int currentDepth)
+struct Level *getLevel(PageTable *pagetable, unsigned int depth)
 {
-	// Instantiate new level
-	Level *level = (Level *)malloc(sizeof(Level));
+	// Instantiate new level 0
+	struct Level *levelZero = (struct Level *)malloc(sizeof(struct Level));
 
-	// Set pagetable node to root
-	level->root = pagetable;
+	// Set Level 0 to point back to pagetable
+	levelZero->rootPageTable = pagetable;
 
-	// Set current depth to depth parameter
-	level->currentDepth = currentDepth;
+	// Set current depth to depth parameter should be zero
+	levelZero->currentDepth = depth;
 
-	return level;
-}
-*/
-
-struct Level *getLevel(PageTable *pagetable, unsigned int currentDepth)
-{
-	// Instantiate new level
-	struct Level *level = (struct Level *)malloc(sizeof(struct Level));
-
-	// Set pagetable node to root
-	level->root = pagetable;
-
-	// Set current depth to depth parameter
-	level->currentDepth = currentDepth;
-	printf("Current depth 2: %d\n", level->currentDepth);
-
-	if (pagetable->levelCount == 1 || currentDepth == pagetable->levelCount - 1)
+	if (pagetable->levelCount == 1)
 	{
-		struct Map *m[pagetable->entryCount[currentDepth]];
-		int i = 0;
-		for (i = 0; i < pagetable->entryCount[currentDepth]; i++)
-		{
-			printf("Made it(leaf)\n");
-			m[i] = NULL;
-		}
-		level->map = m;
-		printf("Leaf node has been created\n");
+		levelZero->map = getMap(pagetable, depth);
 	}
 	else
 	{
-		printf("Creating inner level node...\n");
-		struct Level *nextL[pagetable->entryCount[currentDepth]];
-		int i;
-		printf("Entries: %d\n", pagetable->entryCount[currentDepth]);
-		for (i = 0; i < pagetable->entryCount[currentDepth]; i++)
+		//printf("Creating inner level node...\n");
+		levelZero->nextLevel = (struct Level *)malloc(sizeof(struct Level)*pagetable->entryCount[depth]);
+		//printf("Array of struct created\n");
+		int i = 0;
+		for (i = 0; i < pagetable->entryCount[depth]; i++)
 		{
-			printf("Made it\n");
-			nextL[i] = NULL;
+			levelZero->nextLevel = NULL; //Maybe initalize to NULL
 		}
-		level->nextLevel = nextL;
-		printf("Inner level node has been created\n");
 	}
-
-	return level;
+	return levelZero;
 }
 
-unsigned int virtualToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift)
+struct Map * getMap(PageTable *pg, unsigned int depth){
+	struct Map * m = (struct Map*)malloc(sizeof(struct Map) * pg->entryCount[depth]);
+	int i;
+	for(i = 0; i < pg->entryCount[depth]; i++){
+		m[i].isValid = false;
+	}
+	return m;
+}
+
+unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift)
 {
 	unsigned int page;
 	// Bitwise AND the virtual address and mask
 	page = virtualAddress & mask;
 	// Right shift by offset
 	page = page >> shift;
+	printf("PAGE AT GET PAGE: %d\n", page);
 	return page;
 }
 
-void pageInsert(PageTable *pagetable, unsigned int virtualAddress, unsigned int frame)
+void pageInsert(struct PageTable *pg, unsigned int virtualAddress, unsigned int frame)
 {
-	// Call page insert for level on the root level
-	printf("Pagetable frame from function is %u\n", frame);
-	printf("Page insert function called with pagetable, %0x%x, frame: %d\n", virtualAddress, frame);
-	pageInsertForLevel(pagetable->root, virtualAddress, frame);
+	pageInsertForLevel(pg->rootLevel, virtualAddress, frame);
 }
 
-void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame)
+void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame) /*ISSUE WITH PAGETABLE of nextLevel pointing to original pagetable*/
 {
-	// Every level has a pointer to the pagetable root node
-	printf("Page insert call\n");
-	PageTable *pagetable = levelPtr->root;
 	unsigned int depth = levelPtr->currentDepth;
-	printf("Current depth: %d\n", depth);
+	// Find index into the current page level WORKING PROPERLY!
+	unsigned int page = virtualAddressToPageNum(virtualAddress, levelPtr->rootPageTable->bitMaskArr[depth], levelPtr->rootPageTable->shiftArr[depth]);
 
-	// Find index into the current page level
-	unsigned int index = virtualToPageNum(virtualAddress, pagetable->bitMaskArr[depth], pagetable->shiftArr[depth]);
 	// If the level is a leaf node
-	if (depth == pagetable->levelCount - 1)
+	if (depth  == levelPtr->rootPageTable->levelCount - 1)
 	{
-		// Set the page index to valid and store frame
-		Map pageIndex = levelPtr->map[index];
-		pageIndex.isValid = true;
-		pageIndex.frame = pagetable->currentFrame;
-		// Increment current frame number
-		pagetable->currentFrame++;
-		printf("Map inserted at index: %d, frame: %d\n", index, frame);
+		printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
+		levelPtr->map = getMap(levelPtr->rootPageTable, depth);
+		levelPtr->map[page].isValid = true;
+		levelPtr->map[page].frame = frame;
+		printf("Map inserted at index: %d, frame: %d\n", page, frame);
 	}
 	else
 	{
+		printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
 		// Create new Level and set level to current depth + 1
-		Level *newLevel = getLevel(pagetable, depth + 1);
-		// pageInsertForLevel(pointer to new level, address, frame)
+		struct Level *newLevel = getLevel(levelPtr->rootPageTable, depth + 1);
 		pageInsertForLevel(newLevel, virtualAddress, frame);
 	}
 }
 
-Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
+/*Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 {
-}
+	struct Map *mp = (struct Map*)malloc(sizeof(struct Map));
+	int i;
+	for(i = 0; i < pageTable->levelCount; i++){
+		if(pageTable->rootLevel->nextLevel = NULL){
+			mp = NULL;
+		}
+		unsigned int pg = virtualAddressToPageNum(virtualAddress, pageTable->bitMaskArr[i], pageTable->shiftArr[i]);
+		if(pageTable->rootLevel->map){
+			
+		}
+	}
+
+	return mp;
+}*/

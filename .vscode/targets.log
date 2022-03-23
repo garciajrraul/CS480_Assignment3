@@ -6,7 +6,7 @@ make all -f /home/raul/projects/Assignment2/.vscode/Makefile --print-data-base -
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Mar 19 07:21:48 2022
+# Make data base, printed on Tue Mar 22 13:12:44 2022
 
 # Variables
 
@@ -51,7 +51,7 @@ PATH = /home/raul/.vscode-server/bin/c722ca6c7eed3d7987c0d5c3df5c45f6b15e77d1/bi
 # environment
 VSCODE_LOG_STACK = false
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-1c0bbd7f-ffc5-4bdf-addd-8fd29850334f.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-78923250-b88d-45be-ad34-a15802de196a.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # automatic
@@ -270,7 +270,7 @@ dicttree.h:
 # strcache performance: lookups = 38 / hit rate = 47%
 # hash-table stats:
 # Load=20/8192=0%, Rehash=0, Collisions=0/38=0%
-# Finished Make data base on Sat Mar 19 07:21:48 2022
+# Finished Make data base on Tue Mar 22 13:12:44 2022
 
  
 make: *** No rule to make target 'all'.  Stop.
