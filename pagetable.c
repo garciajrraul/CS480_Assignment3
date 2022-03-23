@@ -58,7 +58,7 @@ struct Level *getLevel(PageTable *pagetable, unsigned int depth)
 	// Set current depth to depth parameter should be zero
 	levelZero->currentDepth = depth;
 
-	if (pagetable->levelCount == 1)
+	if (depth == pagetable->levelCount - 1)
 	{
 		levelZero->map = getMap(pagetable, depth);
 	}
@@ -104,19 +104,15 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 	unsigned int page = virtualAddressToPageNum(virtualAddress, levelPtr->rootPageTable->bitMaskArr[depth], levelPtr->rootPageTable->shiftArr[depth]);
 	//printf("PAGE: %d\n", page);
 	// If the level is a leaf node
-	if (depth  == levelPtr->rootPageTable->levelCount - 1)
+	if (depth == levelPtr->rootPageTable->levelCount - 1)
 	{
-		printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
-		if(levelPtr->rootPageTable->levelCount != 1){
-			levelPtr->map = getMap(levelPtr->rootPageTable, depth);
-		}
 		levelPtr->map[page].isValid = true;
 		levelPtr->map[page].frame = frame;
 		printf("Map inserted at index: %i, frame: %d\n", page, frame);
 	}
 	else
 	{
-		printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
+		//printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
 		// Create new Level and set level to current depth + 1
 		struct Level *newLevel = getLevel(levelPtr->rootPageTable, depth + 1);
 		levelPtr->nextLevel[page] = newLevel;
@@ -134,6 +130,9 @@ Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 			printf("MAP : %d\n", levelPtr->map[i].isValid);
 			m = levelPtr->map;
 			return m;
+		}
+		if(levelPtr->nextLevel == NULL){
+
 		}
 		printf("TWO LEVELS\n");
 		/*/NeXT LINE GIvES SEGFAULT FOR 2 LEVELS OR MORE*/
