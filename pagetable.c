@@ -133,6 +133,10 @@ Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 	{
 		unsigned int pg = virtualAddressToPageNum(virtualAddress, pageTable->bitMaskArr[i], pageTable->shiftArr[i]);
 
+		if (levelPtr == NULL)
+		{
+			return NULL;
+		}
 		// If level is a leaf node
 		if (levelPtr->currentDepth == pageTable->levelCount - 1)
 		{
@@ -144,5 +148,4 @@ Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 		// If level is an inner node, go to next level
 		levelPtr = levelPtr->nextLevel[pg];
 	}
-	// return mp;
 }

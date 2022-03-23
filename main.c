@@ -136,23 +136,28 @@ int main(int argc, char **argv)
     // uint32_t address = 0xFE382D91;
     uint32_t address = 0xFFC23A91;
     address = swap_endian(address);
-    pageInsert(pg, address, currentFrame);
+    // pageInsert(pg, address, currentFrame);
     printf("Page Look Up start\n");
-    printf("VALID: %d\n", pageLookup(pg, address)->isValid);
-    if (pageLookup(pg, address)->isValid == false)
-    {
-        pageInsert(pg, address, currentFrame);
-    }
+    // printf("VALID: %d\n", pageLookup(pg, address)->isValid);
+    // if (pageLookup(pg, address)->isValid == false)
+    // {
+    //     pageInsert(pg, address, currentFrame);
+    // }
     printf("-----------------------------------------------------\n");
-    printf("VALID: %d\n", pageLookup(pg, address)->isValid);
-    if (pageLookup(pg, address)->isValid == false)
+    // printf("VALID: %d\n", pageLookup(pg, address)->isValid);
+    Map *mappingFound = pageLookup(pg, address);
+    if (mappingFound != NULL)
     {
-        printf("wrong\n");
-        pageInsert(pg, address, currentFrame);
+        if (mappingFound->isValid == true)
+        {
+            printf("We found it!\n");
+            printf("Address: %0x0x, Frame: %d, Valid: %d\n", address, mappingFound->frame, mappingFound->isValid);
+        }
     }
     else
     {
-        printf("WORKS\n");
+        printf("wrong\n");
+        pageInsert(pg, address, currentFrame);
     }
 
     int b = 0;
