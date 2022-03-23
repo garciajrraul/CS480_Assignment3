@@ -133,10 +133,11 @@ int main(int argc, char **argv)
     {
     }
 
-    uint32_t address = 0xFE382D91;
+    // uint32_t address = 0xFE382D91;
+    uint32_t address = 0xFFC23A91;
     address = swap_endian(address);
     pageInsert(pg, address, currentFrame);
-    /*printf("Page Look Up start\n");
+    printf("Page Look Up start\n");
     printf("VALID: %d\n", pageLookup(pg, address)->isValid);
     if (pageLookup(pg, address)->isValid == false)
     {
@@ -153,10 +154,11 @@ int main(int argc, char **argv)
     {
         printf("WORKS\n");
     }
-    */
+
     int b = 0;
 
     /* Reading of file*/
+    /*
     while (!feof(ifp))
     {
         // get next address and process
@@ -195,7 +197,7 @@ int main(int argc, char **argv)
         b++;
         // Sets how many entries are read FOR TESTING PURPOSES
     }
-
+    */
     /* clean up and return success */
     fclose(ifp);
     return (0);
