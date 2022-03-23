@@ -24,8 +24,7 @@ int main(int argc, char **argv)
     int maxNumberOfPageMapping;
 
     unsigned int numberOfLevels; /*Number of levels for command line arguments*/
-    int idx;    /*Index for command line arguments*/
-
+    int idx;                     /*Index for command line arguments*/
 
     /*Decleration of OptionType Struct*/
     OutputOptionsType output = {.bitmasks = false, .offset = false, .summary = false, .v2p_tlb_pt = false, .virtual2physical = false, .vpn2pfn = false};
@@ -106,10 +105,10 @@ int main(int argc, char **argv)
             j++;
         }
         if (total > 28)
-            { /*Checks to see if page table isn't over 28*/
-                fprintf(stderr, "Too many bits used in page tables\n");
-                exit(EXIT_FAILURE);
-            }
+        { /*Checks to see if page table isn't over 28*/
+            fprintf(stderr, "Too many bits used in page tables\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
     unsigned int currentFrame = 0;
@@ -139,7 +138,6 @@ int main(int argc, char **argv)
     
     unsigned int address = 0x82F998FE;
     pageInsert(pg, address, currentFrame);
-
 
     int b = 0;
     /* Reding of file*/

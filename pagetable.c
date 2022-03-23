@@ -18,7 +18,7 @@ struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 	PT->bitMaskArr = malloc(sizeof(unsigned int)*levels);
 	PT->entryCount = malloc(sizeof(unsigned int)*levels);
 	PT->shiftArr = malloc(sizeof(unsigned int)*levels);
-	
+
 	unsigned int shiftOffset = BITSIZE;
 	int i;
 	/*Assigning to Shift Array and Entry count*/
@@ -45,8 +45,6 @@ struct PageTable *getPageTable(unsigned int levels, unsigned int *levelSizes)
 	}
 
 	PT->rootLevel = getLevel(PT, 0);
-
-
 	return PT;
 }
 
