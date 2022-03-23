@@ -95,6 +95,7 @@ unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int m
 	page = virtualAddress & mask;
 	// Right shift by offset
 	page = page >> shift;
+	printf("PAGE AT GET PAGE: %d\n", page);
 	return page;
 }
 
@@ -106,24 +107,22 @@ void pageInsert(struct PageTable *pg, unsigned int virtualAddress, unsigned int 
 void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame) /*ISSUE WITH PAGETABLE of nextLevel pointing to original pagetable*/
 {
 	unsigned int depth = levelPtr->currentDepth;
-
 	// Find index into the current page level WORKING PROPERLY!
 	unsigned int page = virtualAddressToPageNum(virtualAddress, levelPtr->rootPageTable->bitMaskArr[depth], levelPtr->rootPageTable->shiftArr[depth]);
 
 	// If the level is a leaf node
 	if (depth  == levelPtr->rootPageTable->levelCount - 1)
 	{
-		levelPtr->map = (struct Map *)malloc(sizeof(struct Level) * levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
-		int i;
+		printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
+		levelPtr->map = getMap(levelPtr->rootPageTable, depth);
 		levelPtr->map[page].isValid = true;
 		levelPtr->map[page].frame = frame;
 		printf("Map inserted at index: %d, frame: %d\n", page, frame);
 	}
 	else
 	{
-		//Logic confuses me
+		printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]);
 		// Create new Level and set level to current depth + 1
-		printf("Entry: %d\n", levelPtr->rootPageTable->entryCount[levelPtr->currentDepth]); //ISSUE WITH ACCCESING ARRAY VARIABLES IN PAGETABLE
 		struct Level *newLevel = (struct Level *)malloc(sizeof(struct Level) * levelPtr->rootPageTable->entryCount[levelPtr->currentDepth+1]);
 		newLevel->currentDepth = levelPtr->currentDepth + 1;
 		newLevel ->rootPageTable = levelPtr->rootPageTable;
@@ -132,7 +131,6 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 		for(i = 0; i < newLevel->rootPageTable->entryCount[newLevel->currentDepth]; i++){
 			newLevel->nextLevel = NULL;
 		}
-		printf("FLAG2\n");
 		pageInsertForLevel(newLevel, virtualAddress, frame);
 	}
 }

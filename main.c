@@ -112,7 +112,7 @@ int main(int argc, char **argv)
             }
     }
 
-    int currentFrame = 0;
+    unsigned int currentFrame = 0;
     pg = getPageTable(levels, levelSizes); // PageTable Struct Initilization
     if(output.bitmasks){
         report_bitmasks(levels, pg->bitMaskArr);
