@@ -25,7 +25,7 @@ typedef struct Level
 {
 	struct PageTable *rootPageTable; /*Pointer to root of pagetable*/
 	unsigned int currentDepth; /*Saves Depth of level*/
-	struct Level *nextLevel; /*pointer for next level*/
+	struct Level **nextLevel; /*pointer for next level*/
 	struct Map *map;		 /*pointer for map entries*/
 
 } Level;
