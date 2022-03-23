@@ -113,62 +113,88 @@ int main(int argc, char **argv)
 
     unsigned int currentFrame = 0;
     pg = getPageTable(levels, levelSizes); // PageTable Struct Initilization
-    if(output.bitmasks){
+    if (output.bitmasks)
+    {
         report_bitmasks(levels, pg->bitMaskArr);
     }
     else if (output.virtual2physical)
     {
-
     }
     else if (output.v2p_tlb_pt)
     {
-    
     }
     else if (output.vpn2pfn)
     {
-
     }
     else if (output.offset)
     {
-        
     }
-    else{
+    else
+    {
+    }
 
-    }
-    
     uint32_t address = 0xFE382D91;
     address = swap_endian(address);
     pageInsert(pg, address, currentFrame);
     /*printf("Page Look Up start\n");
     printf("VALID: %d\n", pageLookup(pg, address)->isValid);
-    if(pageLookup(pg, address)->isValid == false){
+    if (pageLookup(pg, address)->isValid == false)
+    {
         pageInsert(pg, address, currentFrame);
     }
     printf("-----------------------------------------------------\n");
     printf("VALID: %d\n", pageLookup(pg, address)->isValid);
-    if(pageLookup(pg, address)->isValid == false){
+    if (pageLookup(pg, address)->isValid == false)
+    {
         printf("wrong\n");
         pageInsert(pg, address, currentFrame);
     }
-    else{
+    else
+    {
         printf("WORKS\n");
-    }*/
-    
-
+    }
+    */
     int b = 0;
-    /* Reding of file*/
-    /*while (!feof(ifp)) {
-        //get next address and process
-        if (NextAddress(ifp, &trace)) {
-            AddressDecoder(&trace, stdout);
-            i++;
-            if ((i % 100000) == 0)fprintf(stderr,"%dK samples processed\r", i/100000);
+
+    /* Reading of file*/
+    while (!feof(ifp))
+    {
+        // get next address and process
+        // BYUADDRESSTRACE is stored in 'trace' variable
+        if (NextAddress(ifp, &trace))
+        {
+            printf("Address: %0x%x\n", trace.addr);
+            // Gets address, don't have to swap endian it is already swapped to little endian
+            uint32_t addr = trace.addr;
+            // TODO: Search the TLB Cache
+            //
+            //
+            // TODO: If VPN->PFN mapping is found in TLB, use frame number for translation
+            //       and TLB Cache Hits + 1
+            //
+            //
+            // TODO: If TLB is a miss, use the pagetable to find the VPN->PFN mapping
+            //
+            //
+            //
+            // TODO: If VPN->PFN mapping is in pagetable, insert it in the TLB Cache
+            //       and PageTable Hits + 1
+            //       If the cache is full, apply cache replacement using approx LRU policy
+            //
+            //
+            // TODO: If VPN->PFN mapping is NOT in pagetable, insert page to page table,
+            //       insert to TLB cache, and apply cache replacement if TLB is full
+            //
+            //
         }
-        /*if(b == 20){
+        // Sets how many entries are read FOR TESTING PURPOSES
+        if (b == 20)
+        {
             break;
         }
         b++;
-    }*/
+        // Sets how many entries are read FOR TESTING PURPOSES
+    }
 
     /* clean up and return success */
     fclose(ifp);
