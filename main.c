@@ -114,6 +114,29 @@ int main(int argc, char **argv)
 
     int currentFrame = 0;
     pg = getPageTable(levels, levelSizes); // PageTable Struct Initilization
+    if(output.bitmasks){
+        report_bitmasks(levels, pg->bitMaskArr);
+    }
+    else if (output.virtual2physical)
+    {
+
+    }
+    else if (output.v2p_tlb_pt)
+    {
+    
+    }
+    else if (output.vpn2pfn)
+    {
+
+    }
+    else if (output.offset)
+    {
+        
+    }
+    else{
+
+    }
+    
     unsigned int address = 0x82F998FE;
     pageInsert(pg, address, currentFrame);
 
