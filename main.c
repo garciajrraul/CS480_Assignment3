@@ -138,7 +138,20 @@ int main(int argc, char **argv)
     
     unsigned int address = 0xFE382D91;
     address = swap_endian(address);
-    pageInsert(pg, address, currentFrame);
+    printf("CHECK\n");
+    if(pageLookup(pg, address) == false){
+        printf("MADE IT1\n");
+        pageInsert(pg, address, currentFrame);
+    }
+    printf("-----------------------------------------------------\n");
+    if(pageLookup(pg, address) != false){
+        pageInsert(pg, address, currentFrame);
+    }
+    else{
+        printf("WORKS\n");
+    }
+    
+    
 
     int b = 0;
     /* Reding of file*/

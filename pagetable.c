@@ -71,7 +71,7 @@ struct Level *getLevel(PageTable *pagetable, unsigned int depth)
 		int i = 0;
 		for (i = 0; i < pagetable->entryCount[depth]; i++)
 		{
-			levelZero->nextLevel = NULL; //Maybe initalize to NULL
+			levelZero->nextLevel[i] = NULL; //Maybe initalize to NULL
 		}
 	}
 	return levelZero;
@@ -88,9 +88,9 @@ struct Map * getMap(PageTable *pg, unsigned int depth){
 
 unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift)
 {
-	printf("Virtual Address: AT GET PAGE: %08x\n", virtualAddress);
+	/*printf("Virtual Address: AT GET PAGE: %08x\n", virtualAddress);
 	printf("Mask AT GET PAGE: %08x\n", mask);
-	printf("Shift AT GET PAGE: %d\n", shift);
+	printf("Shift AT GET PAGE: %d\n", shift);*/
 	return (virtualAddress & mask) >> shift;
 }
 
@@ -124,19 +124,21 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 	}
 }
 
-/*Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
+Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 {
+	struct Level *levelPtr = pageTable->rootLevel;
 	struct Map *mp = (struct Map*)malloc(sizeof(struct Map));
 	int i;
 	for(i = 0; i < pageTable->levelCount; i++){
-		if(pageTable->rootLevel->nextLevel = NULL){
+		if(levelPtr == NULL){
 			mp = NULL;
+			return mp;
 		}
 		unsigned int pg = virtualAddressToPageNum(virtualAddress, pageTable->bitMaskArr[i], pageTable->shiftArr[i]);
-		if(pageTable->rootLevel->map){
-			
+		if(levelPtr->map){
+			mp = levelPtr->nextLevel[pg]->map;
 		}
-	}
-
+		levelPtr = levelPtr->nextLevel[pg];
+	} 
 	return mp;
-}*/
+}
