@@ -113,78 +113,46 @@ int main(int argc, char **argv)
 
     unsigned int currentFrame = 0;
     pg = getPageTable(levels, levelSizes); // PageTable Struct Initilization
+    int limit = 0;
+
+    //Prints BitMask
     if (output.bitmasks)
     {
-        report_bitmasks(levels, pg->bitMaskArr);
+        report_bitmasks(levels,pg->bitMaskArr);
     }
-    else if (output.virtual2physical)
-    {
-    }
-    else if (output.v2p_tlb_pt)
-    {
-    }
-    else if (output.vpn2pfn)
-    {
-    }
-    else if (output.offset)
-    {
-    }
-    else
-    {
-    }
-
-    // uint32_t address = 0xFE382D91;
-    uint32_t address = 0xFFC23A91;
-    address = swap_endian(address);
-<<<<<<< HEAD
-    pageInsert(pg, address, currentFrame);
-    /*printf("Page Look Up start\n");
-    printf("VALID: %d\n", pageLookUp(pg, address)->isValid);
-    if(pageLookUp(pg, address)->isValid == false){
-        pageInsert(pg, address, currentFrame);
-    }
-    printf("-----------------------------------------------------\n");
-    printf("VALID: %d\n", pageLookUp(pg, address)->isValid);
-    if(pageLookUp(pg, address)->isValid == false){
-=======
-    // pageInsert(pg, address, currentFrame);
-    printf("Page Look Up start\n");
-    // printf("VALID: %d\n", pageLookup(pg, address)->isValid);
-    // if (pageLookup(pg, address)->isValid == false)
-    // {
-    //     pageInsert(pg, address, currentFrame);
-    // }
-    printf("-----------------------------------------------------\n");
-    // printf("VALID: %d\n", pageLookup(pg, address)->isValid);
-    Map *mappingFound = pageLookup(pg, address);
-    if (mappingFound != NULL)
-    {
-        if (mappingFound->isValid == true)
-        {
-            printf("We found it!\n");
-            printf("Address: %0x0x, Frame: %d, Valid: %d\n", address, mappingFound->frame, mappingFound->isValid);
-        }
-    }
-    else
-    {
->>>>>>> origin/main
-        printf("wrong\n");
-        pageInsert(pg, address, currentFrame);
-    }
-
-    int b = 0;
 
     /* Reading of file*/
-    /*
     while (!feof(ifp))
     {
         // get next address and process
         // BYUADDRESSTRACE is stored in 'trace' variable
         if (NextAddress(ifp, &trace))
         {
-            printf("Address: %0x%x\n", trace.addr);
+            //printf("Address: %0x%x\n", trace.addr);
             // Gets address, don't have to swap endian it is already swapped to little endian
             uint32_t addr = trace.addr;
+
+            Map *mappingFound = pageLookup(pg, addr);
+            if(mappingFound != NULL){
+                if(mappingFound->isValid == true){
+
+                }
+            }
+            else{
+                pageInsert(pg, addr, currentFrame);
+                ++currentFrame;
+            }
+
+            //Prints Offset
+            if(output.offset){
+                hexnum(virtualToOffset(pg, addr));
+            }
+
+            //Prints Virtual Address
+            if(output.vpn2pfn){
+                //report_pagemap(pg->levelCount,  ,currentFrame);
+            }
+
             // TODO: Search the TLB Cache
             //
             //
@@ -207,14 +175,18 @@ int main(int argc, char **argv)
             //
         }
         // Sets how many entries are read FOR TESTING PURPOSES
-        if (b == 20)
+        if (limit == numberOfMemoryAccesses && numberOfMemoryAccesses != NULL)
         {
             break;
         }
-        b++;
+        limit++;
         // Sets how many entries are read FOR TESTING PURPOSES
     }
-    */
+
+    if(output.summary){
+
+    }
+    
     /* clean up and return success */
     fclose(ifp);
     return (0);

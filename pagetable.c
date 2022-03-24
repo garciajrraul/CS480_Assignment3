@@ -60,24 +60,12 @@ struct Level *getLevel(PageTable *pagetable, unsigned int depth)
 
 	if (depth == pagetable->levelCount - 1)
 	{
-		struct Map *mp = (struct Map*)malloc(sizeof(struct Map) * pagetable->entryCount[depth]); 
-		levelZero->mapPtr = mp;
-		int i = 0;
-		for (i = 0; i < pagetable->entryCount[depth]; i++)
-		{
-			struct Map * m = getMap(pagetable, depth);
-			levelZero->mapPtr[i].map = m;
-		}
+		levelZero->map = getMap(pagetable, depth);
 	}
 	else
 	{
-<<<<<<< HEAD
-		//printf("Creating inner level node...\n");
-		levelZero->nextLevel = (struct Level *)malloc(sizeof(struct Level));
-=======
 		// printf("Creating inner level node...\n");
 		levelZero->nextLevel = (struct Level **)malloc(sizeof(struct Level) * pagetable->entryCount[depth]);
->>>>>>> origin/main
 		int i = 0;
 		for (i = 0; i < pagetable->entryCount[depth]; i++)
 		{
@@ -87,12 +75,6 @@ struct Level *getLevel(PageTable *pagetable, unsigned int depth)
 	return levelZero;
 }
 
-<<<<<<< HEAD
-struct Map * getMap(PageTable *pg, unsigned int depth){
-	struct Map * m = (struct Map*)malloc(sizeof(struct Map));
-	m->isValid = false;
-	return m;
-=======
 struct Map **getMap(PageTable *pg, unsigned int depth)
 {
 	struct Map **mapArr = (struct Map **)malloc(sizeof(struct Map) * pg->entryCount[depth]);
@@ -104,7 +86,6 @@ struct Map **getMap(PageTable *pg, unsigned int depth)
 		mapArr[i]->isValid = false;
 	}
 	return mapArr;
->>>>>>> origin/main
 }
 
 unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift)
@@ -120,7 +101,7 @@ void pageInsert(struct PageTable *pg, unsigned int virtualAddress, unsigned int 
 	pageInsertForLevel(pg->rootLevel, virtualAddress, frame);
 }
 
-void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame)
+void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame) /*ISSUE WITH PAGETABLE of nextLevel pointing to original pagetable*/
 {
 	unsigned int depth = levelPtr->currentDepth;
 	// Find index into the current page level WORKING PROPERLY!
@@ -129,16 +110,9 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 	//  If the level is a leaf node
 	if (depth == levelPtr->rootPageTable->levelCount - 1)
 	{
-<<<<<<< HEAD
-		struct Map* m = (struct Map*)malloc(sizeof(struct Map));
-		levelPtr->mapPtr->map[page]->isValid = true;
-		levelPtr->mapPtr->map[page]->frame = frame;
-		printf("Map inserted at index: %i, frame: %d, isValid:%d\n", page, frame, levelPtr->mapPtr->isValid);
-=======
 		levelPtr->map[page]->isValid = true;
 		levelPtr->map[page]->frame = frame;
 		printf("Map inserted at index: %i, frame: %d\n", page, frame);
->>>>>>> origin/main
 	}
 	else
 	{
@@ -150,7 +124,7 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 	}
 }
 
-/*Map *pageLookUp(PageTable *pageTable, unsigned int virtualAddress)
+Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 {
 	struct Map *m;
 	struct Level *levelPtr = pageTable->rootLevel; // Should be at the root level
@@ -163,31 +137,26 @@ void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned i
 		{
 			return NULL;
 		}
-<<<<<<< HEAD
-		printf("TWO LEVELS\n");
-		//NeXT LINE GIvES SEGFAULT FOR 2 LEVELS OR MORE
-		unsigned int pg = virtualAddressToPageNum(virtualAddress, pageTable->bitMaskArr[i], pageTable->shiftArr[i]);
-		levelPtr = levelPtr->nextLevel[pg];
-		printf("NO SEG FAULT\n");
-		if(levelPtr->map[pg].isValid){
-			printf("NOT YET\n");
-			levelPtr->nextLevel[pg]->map;
-=======
 		// If level is a leaf node
 		if (levelPtr->currentDepth == pageTable->levelCount - 1)
 		{
 			// If mapping is found return the mapping
 			if (levelPtr->map[pg]->isValid)
 				return levelPtr->map[pg];
->>>>>>> origin/main
 		}
 
 		// If level is an inner node, go to next level
 		levelPtr = levelPtr->nextLevel[pg];
 	}
-<<<<<<< HEAD
-	//return mp;
-}*/
-=======
 }
->>>>>>> origin/main
+
+uint32_t virtualToOffset(PageTable *pagetable, uint32_t address){
+	uint32_t sub;
+	uint32_t offset = address;
+	int i;
+	for(i=0; i < pagetable->levelCount; i++){
+		sub = address & pagetable->bitMaskArr[i];
+		offset -= sub;
+	}
+	return offset;
+}

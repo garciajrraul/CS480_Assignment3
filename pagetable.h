@@ -24,21 +24,14 @@ typedef struct PageTable
 typedef struct Level
 {
 	struct PageTable *rootPageTable; /*Pointer to root of pagetable*/
-<<<<<<< HEAD
-	unsigned int currentDepth; /*Saves Depth of level*/
-	struct Level **nextLevel; /*pointer for next level*/
-	struct Map *mapPtr;		 /*pointer for map entries*/
-=======
 	unsigned int currentDepth;		 /*Saves Depth of level*/
 	struct Level **nextLevel;		 /*pointer for next level*/
 	struct Map **map;				 /*pointer for map entries*/
->>>>>>> origin/main
 
 } Level;
 
 typedef struct Map
 {
-	struct Map **map;
 	bool isValid;		/* Boolean flag denoting whether the page is valid */
 	unsigned int frame; /* Physical frame number */
 } Map;
@@ -49,6 +42,7 @@ struct Map **getMap(PageTable *pg, unsigned int depth);
 unsigned int virtualAddressToPageNum(unsigned int virtualAddress, unsigned int mask, unsigned int shift);
 void pageInsert(PageTable *pagetable, unsigned int virtualAddress, unsigned int frame);
 void pageInsertForLevel(Level *levelPtr, unsigned int virtualAddress, unsigned int frame);
-Map *pageLookUp(PageTable *pageTable, unsigned int virtualAddress);
+Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress);
+uint32_t virtualToOffset(PageTable *pagetable, uint32_t address);
 
 #endif
