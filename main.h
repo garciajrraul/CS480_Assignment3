@@ -7,6 +7,8 @@ Name: 	Raul Garcia Jr
 #Assignemt 3
 */
 
+//All the includes that are needed for the project.
+//Just called include main.h for all files that need them
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -19,6 +21,6 @@ Name: 	Raul Garcia Jr
 #ifndef MAIN_H
 #define MAIN_H
 
-#define BITSIZE 32
+#define BITSIZE 32 //BITSIZE holds the number of bits we are using in total
 
 #endif
