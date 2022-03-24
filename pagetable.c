@@ -162,32 +162,6 @@ Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
 	}
 }
 
-/*Map *pageLookup(PageTable *pageTable, unsigned int virtualAddress)
-{
-	struct Map *m; //Map to be returned
-	struct Level *levelPtr = pageTable->rootLevel; // Should be at the root level
-	int i;
-	for (i = 0; i < pageTable->levelCount; i++)
-	{
-		unsigned int pg = virtualAddressToPageNum(virtualAddress, pageTable->bitMaskArr[i], pageTable->shiftArr[i]);
-
-		if (levelPtr == NULL)
-		{
-			return NULL;
-		}
-		// If level is a leaf node
-		if (levelPtr->currentDepth == pageTable->levelCount - 1)
-		{
-			// If mapping is found return the mapping
-			if (levelPtr->map[pg]->isValid)
-				return levelPtr->map[pg];
-		}
-
-		// If level is an inner node, go to next level
-		levelPtr = levelPtr->nextLevel[pg];
-	}
-}*/
-
 /*Method to assist with offset print*/
 uint32_t virtualToOffset(PageTable *pagetable, uint32_t address){
 	uint32_t sub;

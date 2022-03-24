@@ -112,7 +112,8 @@ void report_summary(unsigned int page_size,
  */
 void report_bitmasks(int levels, uint32_t *masks) {
   printf("Bitmasks\n");
-  for (int idx = 0; idx < levels; idx++) 
+  int idx;
+  for (idx = 0; idx < levels; idx++) 
     /* show mask entry and move to next */
     printf("level %d mask %08X\n", idx, masks[idx]);
 
@@ -128,7 +129,8 @@ void report_bitmasks(int levels, uint32_t *masks) {
  */
 void report_pagemap(int levels, uint32_t *pages, uint32_t frame) {
   /* output pages */
-  for (int idx=0; idx < levels; idx++)
+  int idx;
+  for (idx=0; idx < levels; idx++)
     printf("%X ", pages[idx]);
   /* output frame */
   printf("-> %X\n", frame);

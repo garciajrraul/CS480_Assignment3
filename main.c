@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 
     /*Decleration of OptionType Struct and sets all to false until one is set to true by -o*/
     OutputOptionsType output = {.bitmasks = false, .offset = false, .summary = false, .v2p_tlb_pt = false, .virtual2physical = false, .vpn2pfn = false};
-    struct PageTable *pg; /*Decleration of PageTable Struct*/
+    struct PageTable *pg = (struct PageTable *)malloc(sizeof(struct PageTable)); /*Decleration of PageTable Struct*/
 
     /*Optional Argument checking*/
     int option;
@@ -42,9 +42,13 @@ int main(int argc, char **argv)
             break;
         case 'c':
             maxNumberOfPageMapping = atoi(optarg);
+            if(maxNumberOfPageMapping <= 0){
+                fprintf(stderr, "Cache capacity must be a number, greater than or equal to 0\n");
+                exit(EXIT_FAILURE);
+            }
             break;
         case 'o': /*Setting the output mode*/
-            if (strcmp("bitmask", optarg) == 0)
+            if (strcmp("bitmasks", optarg) == 0)
             {
                 output.bitmasks = true;
             }
@@ -97,7 +101,7 @@ int main(int argc, char **argv)
         {
             if (atoi(argv[i]) < 1)
             { /*Checks to see if the page table is at least 1*/
-                fprintf(stderr, "Level 0 page table must be at least 1 bit\n");
+                fprintf(stderr, "Level %d page table must be at least 1 bit\n", idx-1);
                 exit(EXIT_FAILURE);
             }
             total += atoi(argv[i]);
@@ -130,7 +134,7 @@ int main(int argc, char **argv)
             {
                 //printf("Address: %0x%x\n", trace.addr);
                 // Gets address, don't have to swap endian it is already swapped to little endian
-                uint32_t addr = trace.addr;
+                long unsigned int addr = trace.addr;
 
                 Map *mappingFound = pageLookup(pg, addr);
                 if(mappingFound == NULL){
